@@ -99,12 +99,12 @@ public class XmlFilterBuilder {
             @Override
             public FilterResult filter(Map entry) {
                 if (chain.isEmpty()) {
-                    return FilterResult.YES;
+                    return FilterResult.PASS;
                 }
                 for (XmlFilter filter : chain) {
                     FilterResult result = filter.filter(entry);
                     if (result == FilterResult.YES) {
-                        return result;
+                        return FilterResult.YES;
                     }
                 }
                 return FilterResult.NO;
@@ -121,12 +121,12 @@ public class XmlFilterBuilder {
             @Override
             public FilterResult filter(Map entry) {
                 if (chain.isEmpty()) {
-                    return FilterResult.YES;
+                    return FilterResult.PASS;
                 }
                 for (XmlFilter filter : chain) {
                     FilterResult result = filter.filter(entry);
-                    if (result == FilterResult.NO) {
-                        return result;
+                    if (result != FilterResult.YES) {
+                        return FilterResult.NO;
                     }
                 }
                 return FilterResult.YES;

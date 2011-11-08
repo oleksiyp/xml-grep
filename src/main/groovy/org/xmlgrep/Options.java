@@ -9,22 +9,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Options {
-    @Option(name="-p", usage="Match pattern", aliases = "--pattern", metaVar="field=value")
+    @Option(name="-p", usage="Match pattern", aliases = "--pattern", metaVar="field=value", multiValued=true)
     List<String> includeFieldPatternPair = new ArrayList<String>();
 
-    @Option(name="-ep", usage="Does not match pattern", aliases = "--exclude-pattern", metaVar="field=value")
+    @Option(name="-ep", usage="Does not match pattern", aliases = "--exclude-pattern", metaVar="field=value", multiValued=true)
     List<String> excludeFieldPatternPair = new ArrayList<String>();
 
-    @Option(name="-c", usage="Matches text", aliases = "--contain", metaVar="field=value")
+    @Option(name="-c", usage="Matches text", aliases = "--contain", metaVar="field=value", multiValued=true)
     List<String> includeFieldContainsTextPair = new ArrayList<String>();
 
-    @Option(name="-ec", usage="Does not match text", aliases = "--exclude-contain", metaVar="field=value")
+    @Option(name="-ec", usage="Does not match text", aliases = "--exclude-contain", metaVar="field=value", multiValued=true)
     List<String> excludeFieldContainsTextPair = new ArrayList<String>();
 
-    @Option(name="-m", usage="Contains text", aliases = "--match", metaVar="field=value")
+    @Option(name="-m", usage="Contains text", aliases = "--match", metaVar="field=value", multiValued=true)
     List<String> includeFieldMatchTextPair = new ArrayList<String>();
 
-    @Option(name="-em", usage="Does not contains text", aliases = "--exclude-match", metaVar="field=value")
+    @Option(name="-em", usage="Does not contains text", aliases = "--exclude-match", metaVar="field=value", multiValued=true)
     List<String> excludeFieldMatchTextPair = new ArrayList<String>();
 
     @Option(name="-ot", usage="Type of output: text, xml, json", aliases = "--output-type")

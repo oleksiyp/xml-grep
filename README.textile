@@ -1,0 +1,57 @@
+h1. XML grep tool
+
+h2. Commandline usage
+
+<pre>
+Argument "file/url" is required
+java -jar xmlgrep.jar [options...] file/url entryPath [matchesField...]
+ file/url                            : File or URL to parse
+ entryPath                           : Period('.') separated path to the
+                                       element where xml extraction starts e.g.
+                                       'ROOT Element'.'subelement'.'subsubelemen
+                                       t'
+ matchesField                        : Pairs field=value to match field(which
+                                       is indeed path inside entry) and value -
+                                       value to match
+ -c (--contain) field=value          : Matches text
+ -ec (--exclude-contain) field=value : Does not match text
+ -em (--exclude-match) field=value   : Does not contains text
+ -ep (--exclude-pattern) field=value : Does not match pattern
+ -m (--match) field=value            : Contains text
+ -of (--output-format) VAL           : Output format - any expression like:
+                                       "#{value1} #{subelement.value2}"
+ -ot (--output-type) VAL             : Type of output: text, xml, json
+ -p (--pattern) field=value          : Match pattern
+</pre>
+
+h3. Example1
+
+Gets dependecies from pom file.
+
+<pre>
+java -jar xmlgrep-1.0.jar pom.xml project.dependencies.dependency -of "#{groupId}:#{artifactId}:#{version}"
+</pre>
+
+h3. Example2
+
+Gets entries from virus database. Searching dropbox or hotfile
+
+<pre>
+java -jar xmlgrep-1.0.jar http://support.clean-mx.de/clean-mx/xmlviruses.php output.entries.entry -of "#{domain} #{ip}" -c domain=dropbox -c domain=hotfile
+</pre>
+
+h3. Example3
+
+Gets entries from virus database. Searching domain contains dropbox and virusname contains Dropper.
+
+<pre>
+java -jar xmlgrep-1.0.jar http://support.clean-mx.de/clean-mx/xmlvirusephp output.entries.entry -of "#{domain} #{ip} #{virusname}" -c domain=dropbox,virusname=Dropper
+</pre>
+
+h3. Example4
+
+Gets entries from virus database. Searching ip matches the pattern "64\.120\.227\.\d+"
+
+<pre>
+java -jar xmlgrep-1.0.jar http://support.clean-mx.de/clean-mx/xmlvirusephp output.entries.entry -of "#{domain} #{ip} #{virusname}" -p ip=64\.120\.227\.\d+
+</pre>

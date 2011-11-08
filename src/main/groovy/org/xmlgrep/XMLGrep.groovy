@@ -113,28 +113,29 @@ public class XMLGrep {
 
     public static void main(String[] args) {
         Options options = new Options().parse(args);
-        XmlFilterBuilder builder = new XmlFilterBuilder();
+        XmlFilterBuilder orBuilder = new XmlFilterBuilder();
         def buildFilter = {List<String> clauses, filterClause ->
-            XmlFilterBuilder andBuilder = new XmlFilterBuilder();
             for (String clause : clauses) {
+                XmlFilterBuilder andBuilder = new XmlFilterBuilder();
                 for (String pair : clause.split(" *, *")) {
                     String []arr = pair.split("="); String field = arr[0]; String value = arr[1];
-                    filterClause(field, value);
+                    filterClause(andBuilder, field, value);
                 }
+                orBuilder.addFilter(andBuilder.toAndFilter());
             }
-            builder.addFilter(andBuilder.toAndFilter());
+
         }
 
-        buildFilter(options.includeFieldContainsTextPair, {field,value->builder.containsText(field, value)});
-        buildFilter(options.excludeFieldContainsTextPair, {field,value->builder.doesNotContainText(field, value)});
-        buildFilter(options.includeFieldMatchTextPair, {field,value->builder.matchesText(field, value)});
-        buildFilter(options.excludeFieldMatchTextPair, {field,value->builder.doesNotMatchText(field, value)});
-        buildFilter(options.excludeFieldPatternPair, {field,value->builder.matchesPattern(field, value)});
-        buildFilter(options.containsTextPairFilter, {field,value->builder.doesNotMatchPattern(field, value)});
-        buildFilter(options.containsTextPairFilter, {field,value->builder.containsText(field, value)});
+        buildFilter(options.includeFieldContainsTextPair, {builder,field,value->builder.containsText(field, value)});
+        buildFilter(options.excludeFieldContainsTextPair, {builder,field,value->builder.doesNotContainText(field, value)});
+        buildFilter(options.includeFieldMatchTextPair, {builder,field,value->builder.matchesText(field, value)});
+        buildFilter(options.excludeFieldMatchTextPair, {builder,field,value->builder.doesNotMatchText(field, value)});
+        buildFilter(options.includeFieldPatternPair, {builder,field,value->builder.matchesPattern(field, value)});
+        buildFilter(options.excludeFieldPatternPair, {builder,field,value->builder.doesNotMatchPattern(field, value)});
+        buildFilter(options.containsTextPairFilter, {builder,field,value->builder.containsText(field, value)});
 
         XMLGrep grep = new XMLGrep(options.entryPrefix.split("\\."));
-        grep.setFilter(builder.toOrFilter());
+        grep.setFilter(orBuilder.toOrFilter());
         if (options.outputType.equals("text") && options.outputFormat != null) {
             grep.setOutputFormatter(new TextOutputFormatter(options.outputFormat));
         }
